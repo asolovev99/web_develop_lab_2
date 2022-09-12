@@ -1,5 +1,6 @@
 import './App.css';
 import React, {useState} from "react";
+import Timer from "./Components/Timer";
 
 
 function App() {
@@ -28,6 +29,9 @@ function App() {
     <button onClick={clickHandlerPlus}>+</button>
       {value}
     <button onClick={clickHandlerMinus}>-</button>
+
+      <br/>
+      <Timer/>
     </>
   ;
 }
