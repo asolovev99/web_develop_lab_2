@@ -1,20 +1,30 @@
 import './App.css';
-import {useState} from "react";
+import React, {useState} from "react";
 
 
 function App() {
   let [value, setValue] = useState(1);
+  let [deltaValue, setDeltaValue] = useState(1);
 
   const clickHandlerPlus = () => {
-    setValue(value + 1);
+    setValue(value + deltaValue);
   }
   const clickHandlerMinus = () => {
-    if (value > 0) {
-      setValue(value - 1);
+    if (value >= deltaValue) {
+      setValue(value - deltaValue);
     }
   }
 
   return <>
+    <input
+      type="range"
+      value={deltaValue}
+      min={1}
+      max={10}
+      onChange={e => setDeltaValue(Number(e.target.value))}
+    />
+    {deltaValue}
+    <br/>
     <button onClick={clickHandlerPlus}>+</button>
       {value}
     <button onClick={clickHandlerMinus}>-</button>
