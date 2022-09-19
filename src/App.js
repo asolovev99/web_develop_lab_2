@@ -1,6 +1,7 @@
 import './App.css';
 import React, {useState} from "react";
 import Timer from "./Components/Timer";
+import TimerForward from "./Components/TimerForward";
 
 
 function App() {
@@ -32,6 +33,9 @@ function App() {
 
       <br/>
       <Timer/>
+
+      <br/>
+      <TimerForward/>
     </>
   ;
 }
