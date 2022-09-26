@@ -2,10 +2,12 @@ import './App.css';
 import React, {useState} from "react";
 import Timer from "./Components/Timer";
 import TimerForward from "./Components/TimerForward";
+import SelectboxNotRio from "./Components/SelectboxNotRio";
+import Calculator from "./Components/Calculator";
 
 
 function App() {
-  let [value, setValue] = useState(1);
+  /*let [value, setValue] = useState(1);
   let [deltaValue, setDeltaValue] = useState(1);
 
   const clickHandlerPlus = () => {
@@ -15,10 +17,10 @@ function App() {
     if (value >= deltaValue) {
       setValue(value - deltaValue);
     }
-  }
+  }*/
 
   return <>
-    <input
+    {/*<input
       type="range"
       value={deltaValue}
       min={1}
@@ -35,7 +37,12 @@ function App() {
       <Timer/>
 
       <br/>
-      <TimerForward/>
+      <TimerForward/>*/}
+
+      <SelectboxNotRio/>
+      <br/>
+      <br/>
+      <Calculator/>
     </>
   ;
 }
