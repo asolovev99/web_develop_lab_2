@@ -4,6 +4,7 @@ import Timer from "./Components/Timer";
 import TimerForward from "./Components/TimerForward";
 import SelectboxNotRio from "./Components/SelectboxNotRio";
 import Calculator from "./Components/Calculator";
+import Validation from "./Components/Validation";
 
 
 function App() {
@@ -39,10 +40,11 @@ function App() {
       <br/>
       <TimerForward/>*/}
 
-      <SelectboxNotRio/>
+      {/*<SelectboxNotRio/>
       <br/>
       <br/>
-      <Calculator/>
+      <Calculator/>*/}
+      <Validation/>
     </>
   ;
 }
