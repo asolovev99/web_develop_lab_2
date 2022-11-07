@@ -1,5 +1,7 @@
 import React, {useState} from "react";
 
+const URL = 'http://localhost:3001/auth';
+
 export default function LoginForm() {
     const [loginError, setLoginError] = useState('');
     const [passwordError, setPasswordError] = useState('');
@@ -13,7 +15,7 @@ export default function LoginForm() {
         setPassword(event.target.value);
     }
 
-    function handleClickSubmit() {
+    async function handleClickSubmit() {
         let currentLoginError = '';
         let currentPasswordError = '';
 
@@ -37,6 +39,26 @@ export default function LoginForm() {
 
         setLoginError(currentLoginError);
         setPasswordError(currentPasswordError);
+
+        if (currentLoginError === '' && currentPasswordError === '') {
+            const dataLogIn = {
+                nickname: login,
+                password: password
+            }
+
+            const response = await fetch(URL, {
+                method: "POST",
+                /*headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                },*/
+                body: JSON.stringify(dataLogIn)
+            });
+
+            console.log(response.status)
+        }
+
+
     }
 
 
