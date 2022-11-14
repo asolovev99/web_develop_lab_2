@@ -42,16 +42,16 @@ export default function LoginForm() {
 
         if (currentLoginError === '' && currentPasswordError === '') {
             const dataLogIn = {
-                nickname: login,
+                login: login,
                 password: password
             }
 
             const response = await fetch(URL, {
                 method: "POST",
-                /*headers: {
+                headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json"
-                },*/
+                },
                 body: JSON.stringify(dataLogIn)
             });
 
