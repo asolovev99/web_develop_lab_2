@@ -10,6 +10,8 @@ import {
 } from 'react-router-dom';
 import HomeForm from "./Components/HomeForm";
 import GetUserInfo from "./Components/GetUserInfo";
+import Topics from "./Components/Topics";
+import Messages from "./Components/Messages";
 
 function App() {
     return <>
@@ -24,19 +26,15 @@ function App() {
                 <li>
                     <Link to="/login">Логин</Link>
                 </li>
-
-                <li>
-                    <Link to='/user info by id'>Информация о пользователе по его ID</Link>
-                </li>
             </ul>
 
             <Routes>
                 <Route path='/registration' element={<RegistrationForm />} />
-                <Route path='/login' element={<LoginForm />} />
+                <Route path='/login' element={<LoginForm/>} />
                 <Route path='/' element={<HomeForm/>} />
 
-
-                <Route path='/user info by id' element={<GetUserInfo/>}/>
+                <Route path='/topics' element={<Topics/>}/>
+                <Route path='/topics/:id' element={<Messages/>}/>
             </Routes>
         </Router>
 

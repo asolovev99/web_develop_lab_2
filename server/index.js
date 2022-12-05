@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const nanoid = require("nanoid");
 let cookies = require("cookie-parser");
+let db = require("./db")
 
 
 
@@ -103,3 +104,9 @@ const port = process.env.PORT || 3001;
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}!`)
 });
+
+(async () => {
+    await db.initDb();
+    await db.test("test", "test");
+    await db.test("test", "test");
+})();

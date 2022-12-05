@@ -31,21 +31,47 @@ const initDb = async () => {
         CREATE TABLE IF NOT EXISTS topics (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT NOT NULL,
-            dateOfCreation TEXT NOT NULL,
+            dateOfCreation INTEGER NOT NULL,
             userId INTEGER NOT NULL,
-            FOREIGN KEY(authorId) REFERENCES users(id)
+            FOREIGN KEY(userId) REFERENCES users(id)
         )`);
 
     await db.exec(`
         CREATE TABLE IF NOT EXISTS messages (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             body TEXT NOT NULL,
-            dateOfCreation TEXT NOT NULL,
+            dateOfCreation INTEGER NOT NULL,
             topicId INTEGER NOT NULL,
             userId INTEGER NOT NULL,
             FOREIGN KEY(userId) REFERENCES users(id),
             FOREIGN KEY(topicId) REFERENCES topics(id)
         )`);
+};
+
+const test = async (login, password) => {
+    // open the database
+    if (!db) {
+        db = await open({
+            filename: 'database.db', // имя и путь к БД
+            driver: sqlite3.Database
+        })
+    }
+
+    let userExist = await db.get('SELECT EXISTS(SELECT id FROM users WHERE login = ?) as exist', login);
+    //let user  = await db.get('SELECT * FROM users WHERE login = ?', login);
+    if (userExist.exist) {
+        //console.log(user);
+    }
+    else {
+        await db.run(
+            'INSERT INTO users (login, password) VALUES (?, ?)',
+            login,
+            password
+        );
+    }
+    const result = await db.get('SELECT id FROM users WHERE login = ?', login);
+
+    return result;
 };
 
 const addUser = async (login, password) => {
@@ -57,11 +83,25 @@ const addUser = async (login, password) => {
         })
     }
 
-    const result = await db.run(
-        'INSERT INTO users VALUES (?, ?)',
+    let userExist = await db.get('SELECT EXISTS(SELECT id FROM users WHERE login = ?) as exist', login);
+    //let user  = await db.get('SELECT * FROM users WHERE login = ?', login);
+    if (userExist.exist) {
+        //console.log(user);
+    }
+    else {
+        await db.run(
+            'INSERT INTO users (login, password) VALUES (?, ?)',
+            login,
+            password
+        );
+    }
+
+    await db.run(
+        'INSERT INTO users (login, password) VALUES (?, ?)',
         login,
         password
-    )
+    );
+    const result = await db.get('SELECT id FROM users WHERE login = ?', login);
 
     return result;
 };
@@ -78,7 +118,7 @@ const addToken = async (token, userLogin) => {
     const userId = await db.get('SELECT id FROM users WHERE login = ?', userLogin);
 
     const result = await db.run(
-        'INSERT INTO tokens VALUES (?, ?)',
+        'INSERT INTO tokens (token, userId) VALUES (?, ?)',
         token,
         userId
     );
@@ -97,16 +137,11 @@ const addTopic = async (bodyOfTopic, dateTimeOfCreation, userLogin) => {
 
     const userId = await db.get('SELECT id FROM users WHERE login = ?', userLogin);
 
-    const dateTimeString = dateTimeOfCreation.getFullYear().toString() + "." +
-        (dateTimeOfCreation.getMonth() + 1).toString() + "." +
-        dateTimeOfCreation.getDate().toString() + " " +
-        dateTimeOfCreation.getHours().toString() + ":" +
-        dateTimeOfCreation.getMinutes().toString() + ":" +
-        dateTimeOfCreation.getSeconds().toString() + ".";
+    const dateTime = Date.now();
 
 
     const result = await db.run(
-        'INSERT INTO tokens VALUES (?, ?)',
+        'INSERT INTO topics VALUES (?, ?)',
         bodyOfTopic,
         dateTimeString,
         userId
@@ -148,5 +183,6 @@ const getDb = () => db;
 
 module.exports = {
     initDb,
-    getDb
+    getDb,
+    test
 }
