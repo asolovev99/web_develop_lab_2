@@ -9,7 +9,7 @@ import {
     Link
 } from 'react-router-dom';
 import HomeForm from "./Components/HomeForm";
-import GetUserInfo from "./Components/GetUserInfo";
+import GetUserInfo from "./Components/Non-viable/GetUserInfo";
 import Topics from "./Components/Topics";
 import Messages from "./Components/Messages";
 
