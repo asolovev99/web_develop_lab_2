@@ -19,9 +19,10 @@ app.get("/", (req, res) => {
     res.status(200).json({ok: true});
 });
 
-app.get("/user", (req, res) => {
+app.get("/user", async (req, res) => {
     if (req.cookies.token !== null && req.cookies.token != undefined) {
-        res.status(200).json({ok: true});
+        let user = await db.getUser(req.cookies.token);
+        res.status(200).json(user);
     }
     else {
         res.status(401).json({message: "Пользователь не авторизован"});
