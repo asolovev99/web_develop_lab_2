@@ -104,6 +104,12 @@ const isUserExist = async (login, password) => {
     return result;
 };
 
+const getUser = async (userToken) => {
+    const userId = (await db.get('SELECT userId FROM tokens WHERE token = ?', userToken)).userId;
+
+    return userId;
+}
+
 const addToken = async (token, userLogin) => {
     // open the database
     if (!db) {
@@ -172,9 +178,11 @@ const getTopics = async (find) => {
         })
     }
 
-    let result = await db.get(`
-        SELECT * FROM topics
-        WHERE title LIKE '%` + find + `%'`
+    let result = await db.all(`
+        SELECT topics.id AS id, topics.title, topics.dateOfCreation, users.id AS userId, users.login FROM topics
+        JOIN users ON topics.userId = users.id
+        WHERE title LIKE '%` + find + `%' 
+        ORDER BY topics.dateOfCreation DESC`
         );    
         
     return result;
@@ -189,7 +197,7 @@ const addTopicAndMessage = async (titleOfTopic, dateTimeOfCreation, userToken, m
         })
     }
 
-    const userId = (await db.get('SELECT userId FROM tokens WHERE token = ?', userToken)).id;
+    const userId = (await db.get('SELECT userId FROM tokens WHERE token = ?', userToken)).userId;
 
     await db.run(
         'INSERT INTO topics (title, dateOfCreation, userId) VALUES (?, ?, ?)',
@@ -197,7 +205,7 @@ const addTopicAndMessage = async (titleOfTopic, dateTimeOfCreation, userToken, m
         dateTimeOfCreation,
         userId
     );
-    const topicId = (await db.get('SELECT id FROM topic WHERE title = ? AND dateOfCreation = ? AND userId = ?',
+    const topicId = (await db.get('SELECT id FROM topics WHERE title = ? AND dateOfCreation = ? AND userId = ?',
     titleOfTopic, dateTimeOfCreation, userId)).id;
 
     await db.run(
@@ -220,11 +228,12 @@ const getTopicAndMessages = async (idOfTopic) => {
         })
     }
 
-    let result = await db.get(`
+    let result = await db.all(`
         SELECT topics.title, messages.body, messages.dateOfCreation, users.login FROM topics
         JOIN messages ON messages.topicId = topics.id
         JOIN users ON users.id = messages.userId
-        WHERE topics.id = ?`, idOfTopic
+        WHERE topics.id = ?
+        ORDER BY messages.dateOfCreation ASC`, idOfTopic
         );    
         
     return result;
@@ -239,7 +248,7 @@ const addMessage = async (message, dateTimeOfCreation, idOfTopic, userToken) => 
         })
     }
 
-    const userId = (await db.get('SELECT userId FROM tokens WHERE token = ?', userToken)).id;
+    const userId = (await db.get('SELECT userId FROM tokens WHERE token = ?', userToken)).userId;
 
     await db.run(
         'INSERT INTO messages (body, dateOfCreation, topicId, userId) VALUES (?, ?, ?, ?)',
@@ -288,6 +297,7 @@ module.exports = {
 
     addUser,
     isUserExist,
+    getUser,
 
     addToken,
     isTokenExist,

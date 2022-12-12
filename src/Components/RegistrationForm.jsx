@@ -1,15 +1,12 @@
-import React, {useState, useContext} from "react";
+import React, {useState} from "react";
 import { useNavigate } from "react-router-dom";
 
-import {UserIdContext} from "./UserIdContext";
+const URL = 'http://localhost:3001/registration';
 
-const URL = 'http://localhost:3001/login';
-
-export default function LoginForm() {
-    const [userIdContext, setUserIdContextContext] = useContext(UserIdContext);    
-
+export default function RegistrationForm() {
     const [loginError, setLoginError] = useState('');
     const [passwordError, setPasswordError] = useState('');
+    const [passwordReapeatError, setPasswordReapeatError] = useState('');
 
     const [login, setLogin] = useState('');
     function handelLoginChange(event) {
@@ -19,12 +16,17 @@ export default function LoginForm() {
     function handelPasswordChange(event) {
         setPassword(event.target.value);
     }
+    const [passwordRepeat, setPasswordRepeat] = useState('');
+    function handelPasswordRepeatChange(event) {
+        setPasswordRepeat(event.target.value);
+    }
 
     const navigate = useNavigate();
 
     function validateLoginAndPassword() {
         let currentLoginError = '';
         let currentPasswordError = '';
+        let currentPasswordRepeatError = '';
 
         if (login.length < 6 || login.length > 20)
         {
@@ -44,14 +46,23 @@ export default function LoginForm() {
             currentPasswordError += "Поле \"Пароль\" не может быть пустым! ";
         }
 
+        if (passwordRepeat.length < 1)
+        {
+            currentPasswordRepeatError += "Поле \"Повтор пароля\" не может быть пустым! ";
+        }
+        if (password !== passwordRepeat) {
+            currentPasswordRepeatError += "Повтор пароля не совпадает с паролем! ";
+        }
+
         setLoginError(currentLoginError);
         setPasswordError(currentPasswordError);
+        setPasswordReapeatError(currentPasswordRepeatError);
     }
 
     async function handleClickSubmit() {
         validateLoginAndPassword();
 
-        if (loginError === '' && passwordError === '') {
+        if (loginError === '' && passwordError === '' && passwordReapeatError === '') {
             const dataLogIn = {
                 login: login,
                 password: password
@@ -66,14 +77,11 @@ export default function LoginForm() {
                 body: JSON.stringify(dataLogIn)
             });
             
-            if (response.status === 200) {
-                setUserIdContextContext((await response.json()).userId);
+            console.log(response.status)
 
-                navigate("/topics");
+            if (response.status === 200) {                 
+                navigate("/login");
             }
-
-            console.log(response)
-            console.log(userIdContext);
         }
     }
 
@@ -88,6 +96,11 @@ export default function LoginForm() {
         <input value={password} onChange={handelPasswordChange} />
         <br/>
         <div>{passwordError}</div>
+
+        Повтор пароля:
+        <input value={passwordRepeat} onChange={handelPasswordRepeatChange} />
+        <br/>
+        <div>{passwordReapeatError}</div>
 
         <button onClick={handleClickSubmit}>Войти</button>
         <br/>
