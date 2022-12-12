@@ -31,8 +31,8 @@ export default function Topics() {
                 <ul>
                     {Array.from(topics).map(topic => 
                     <li key={topic.id}>
-                        <span id={topic.id} onClick={() => {let id = topic.id; handelClickTopic(id);}}>     
-                            <span>{topic.title}</span>
+                        <span id={topic.id}>
+                            <a onClick={() => {let id = topic.id; handelClickTopic(id);}} href="#">{topic.title}</a>
                             <br/>
                             <span>{topic.login} </span>
                             <span>{ new Date(topic.dateOfCreation).toJSON().slice(0,10).split('-').reverse().join('.') } </span>                        
@@ -46,15 +46,16 @@ export default function Topics() {
 
     async function handleClickFind() {  
         console.log("Sending request for topics");
+
+        const searchParams = new URLSearchParams(URL);
         
-        const response = await fetch(URL, {
-            method: "POST",
+        const response = await fetch(URL.searchParams.append('x', 42), {
+            method: "GET",
             credentials: "include",
             headers: {
                 "Accept": "application/json",
                 "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ find: find })
+            }
         });
         
         if (response.status === 200) {
@@ -88,7 +89,21 @@ export default function Topics() {
         fetchData();        
     }, []);
 
+
+    const [id, setId] = useState(0);
+    const [title, setTitle] = useState('');
+    const URL = "https://jsonplaceholder.typicode.com/todos/";
+    async function handleClick(){
+        const response = await fetch(URL);
+        setTitle((await response.json()).title);
+    }
+}
+
     return <>
+        <input onChange={setId(parseInt(value))}/>
+        <button onClick={handleClick}>получить</button>
+        <div>{title}<div/>
+
         <div>Форум</div>
         <br/>
 
@@ -97,5 +112,5 @@ export default function Topics() {
         <br/>
         <button onClick={handleClickCreateNewTopic}>Создать новую тему</button>
         {topicsToHtml()}
-    </>;
+    </div>;
 }

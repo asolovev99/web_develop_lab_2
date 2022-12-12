@@ -19,6 +19,7 @@ import CreateTopicForm from './Components/CreateTopicForm';
 import {UserIdContext} from "./Components/UserIdContext";
 
 import './Components/Styles/global.css';
+import Request from "./Components/Non-viable/Request";
 
 const URLGetUserId = 'http://localhost:3001/user';
 const URLDeleteUserCookie = 'http://localhost:3001/login';
@@ -74,7 +75,7 @@ function App() {
     }, []);
 
     return <>
-        
+            <Request/>
             <ul>
                 <li>
                     <Link to="/">Домашняя страница</Link>

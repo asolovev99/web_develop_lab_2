@@ -19,14 +19,13 @@ export default function Messages() {
         console.log("Id of topic:");
         console.log(id);
 
-        const response = await fetch(URL, {
-            method: "POST",
+        const response = await fetch(`${URL}/${id}`, {
+            method: "GET",
             credentials: "include",
             headers: {
                 "Accept": "application/json",
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ idOfTopic: id })
         });
         
         if (response.status === 200) {
