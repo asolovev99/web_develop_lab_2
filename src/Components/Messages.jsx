@@ -1,4 +1,3 @@
-import e from "express";
 import React, {useState, useEffect} from "react";
 import { useParams } from "react-router-dom";
 
@@ -54,7 +53,7 @@ export default function Messages() {
         }
     }
 
-    async function handleClickAddMessage() {    
+    async function handleClickAddMessage() {
         if (validateMessageToAdd()) {
             const response = await fetch(URL, {
                 method: "POST",

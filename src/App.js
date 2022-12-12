@@ -1,5 +1,7 @@
 import './App.css';
-import React, { useState, createContext } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import RegistrationForm from "./Components/RegistrationForm";
 import LoginForm from "./Components/LoginForm";
 import {
@@ -16,11 +18,53 @@ import CreateTopicForm from './Components/CreateTopicForm';
 
 import {UserIdContext} from "./Components/UserIdContext";
 
+const URLGetUserId = 'http://localhost:3001/user';
+const URLDeleteUserCookie = 'http://localhost:3001/login';
+
 function App() {
+    const navigate = useNavigate();
     const [userIdContext, setUserIdContext] = useState(-1);
 
+    async function getUserId() {
+        const response = await fetch(URLGetUserId, {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        });
+        
+        if (response.status === 200) {
+            setUserIdContext((await response.json()).userId);
+        } 
+    }
+
+
+    useEffect( () => {        
+        getUserId();        
+    }, []);
+
+    async function handleClickLogOut() {
+        console.log("Sending request to delete token");
+
+        const response = await fetch(URLDeleteUserCookie, {
+            method: "DELETE",
+            credentials: "include",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        });
+        
+        if (response.status === 200) {
+            setUserIdContext(-1);
+            navigate("/");
+        }
+    }
+
     return <>
-        <Router>
+        
             <ul>
                 <li>
                     <Link to="/">Домашняя страница</Link>
@@ -45,6 +89,7 @@ function App() {
                     </li>
                 }
             </ul>
+            {userIdContext !== -1 && <button onClick={handleClickLogOut}>Разлогиниться</button>}
 
             <UserIdContext.Provider value={[userIdContext, setUserIdContext]}>
                 <Routes>
@@ -57,7 +102,7 @@ function App() {
                     <Route path='/topics/:id' element={<Messages/>}/>
                 </Routes>
             </UserIdContext.Provider>
-        </Router>
+        
 
     </>;
 

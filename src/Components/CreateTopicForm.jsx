@@ -37,7 +37,8 @@ export default function CreateTopicForm() {
 
         setTitleAndMesssageError(currentTitleAndMesssageError);
 
-        if (currentTitleAndMesssageError === '') {
+        if (currentTitleAndMesssageError === '')
+        {
             return true;
         }
         else {
@@ -46,7 +47,6 @@ export default function CreateTopicForm() {
     }
 
     async function handleClickCreate() {
-
         setInternetError('');
 
         if (validateTitleAndMessage()) {

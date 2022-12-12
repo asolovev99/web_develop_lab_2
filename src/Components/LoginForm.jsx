@@ -52,6 +52,8 @@ export default function LoginForm() {
         validateLoginAndPassword();
 
         if (loginError === '' && passwordError === '') {
+            console.log("Sending request to log in");
+
             const dataLogIn = {
                 login: login,
                 password: password
@@ -59,6 +61,7 @@ export default function LoginForm() {
 
             const response = await fetch(URL, {
                 method: "POST",
+                credentials: "include",
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json"
@@ -72,7 +75,9 @@ export default function LoginForm() {
                 navigate("/topics");
             }
 
+            console.log("response:");
             console.log(response)
+            console.log("userIdContext:");
             console.log(userIdContext);
         }
     }

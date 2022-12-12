@@ -14,12 +14,14 @@ export default function Topics() {
     const [topics, setTopics] = useState();
 
     function handelClickTopic(id) {
+        console.log("Переход к топику с id:");
         console.log(id);
-        console.log("/topics/" + id);
+        
         navigate("/topics/" + id);
     }
 
-    function topicsToHtml() {     
+    function topicsToHtml() { 
+        console.log("Topics:");        
         console.log(topics);    
 
         return (
@@ -42,7 +44,9 @@ export default function Topics() {
         );
     }
 
-    async function handleClickFind() {        
+    async function handleClickFind() {  
+        console.log("Sending request for topics");
+        
         const response = await fetch(URL, {
             method: "POST",
             credentials: "include",
@@ -57,6 +61,7 @@ export default function Topics() {
             setTopics(await response.json());
         }
 
+        console.log("Response:");
         console.log(response);
     }
 
