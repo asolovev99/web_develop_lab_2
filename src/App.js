@@ -18,6 +18,8 @@ import CreateTopicForm from './Components/CreateTopicForm';
 
 import {UserIdContext} from "./Components/UserIdContext";
 
+import './Components/Styles/global.css';
+
 const URLGetUserId = 'http://localhost:3001/user';
 const URLDeleteUserCookie = 'http://localhost:3001/login';
 
@@ -26,6 +28,8 @@ function App() {
     const [userIdContext, setUserIdContext] = useState(-1);
 
     async function getUserId() {
+        console.log("Sending request for userId using cookie");
+
         const response = await fetch(URLGetUserId, {
             method: "GET",
             credentials: "include",
@@ -36,14 +40,16 @@ function App() {
         });
         
         if (response.status === 200) {
+            console.log("User is logged already");
+
             setUserIdContext((await response.json()).userId);
+        }
+        else if (response.status === 401) {
+            console.log("User isn't logged yet");
+
+            setUserIdContext(-1);
         } 
-    }
-
-
-    useEffect( () => {        
-        getUserId();        
-    }, []);
+    } 
 
     async function handleClickLogOut() {
         console.log("Sending request to delete token");
@@ -62,6 +68,10 @@ function App() {
             navigate("/");
         }
     }
+
+    useEffect( () => {        
+        getUserId();        
+    }, []);
 
     return <>
         
@@ -90,19 +100,21 @@ function App() {
                 }
             </ul>
             {userIdContext !== -1 && <button onClick={handleClickLogOut}>Разлогиниться</button>}
+            <br/>
+            
+            <span className=''>
+                <UserIdContext.Provider value={[userIdContext, setUserIdContext]}>
+                    <Routes>
+                        <Route path='/registration' element={<RegistrationForm />} />
+                        <Route path='/login' element={<LoginForm/>} />
+                        <Route path='/' element={<HomeForm/>} />
 
-            <UserIdContext.Provider value={[userIdContext, setUserIdContext]}>
-                <Routes>
-                    <Route path='/registration' element={<RegistrationForm />} />
-                    <Route path='/login' element={<LoginForm/>} />
-                    <Route path='/' element={<HomeForm/>} />
-
-                    <Route path='/topics' element={<Topics/>}/>
-                    <Route path='/createTopic' element={<CreateTopicForm/>}/>
-                    <Route path='/topics/:id' element={<Messages/>}/>
-                </Routes>
-            </UserIdContext.Provider>
-        
+                        <Route path='/topics' element={<Topics/>}/>
+                        <Route path='/createTopic' element={<CreateTopicForm/>}/>
+                        <Route path='/topics/:id' element={<Messages/>}/>
+                    </Routes>
+                </UserIdContext.Provider>
+            </span>
 
     </>;
 

@@ -93,12 +93,12 @@ export default function RegistrationForm() {
         <div>{loginError}</div>
 
         Пароль:
-        <input value={password} onChange={handelPasswordChange} />
+        <input type="password" value={password} onChange={handelPasswordChange} />
         <br/>
         <div>{passwordError}</div>
 
         Повтор пароля:
-        <input value={passwordRepeat} onChange={handelPasswordRepeatChange} />
+        <input type="password" value={passwordRepeat} onChange={handelPasswordRepeatChange} />
         <br/>
         <div>{passwordReapeatError}</div>
 

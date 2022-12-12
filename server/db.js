@@ -105,7 +105,12 @@ const isUserExist = async (login, password) => {
 };
 
 const getUser = async (userToken) => {
-    const userId = (await db.get('SELECT userId FROM tokens WHERE token = ?', userToken)).userId;
+    
+    let userId = -1;
+    const userIdDb = await db.get('SELECT userId FROM tokens WHERE token = ?', userToken);
+    if (userIdDb !== undefined && userIdDb !== null) {
+        userId = userIdDb.userId;
+    }
 
     return userId;
 }

@@ -20,9 +20,22 @@ app.get("/", (req, res) => {
 });
 
 app.get("/user", async (req, res) => {
+    console.log("GET /user");
+
     if (req.cookies.token !== null && req.cookies.token != undefined) {
         let user = await db.getUser(req.cookies.token);
-        res.status(200).json(user);
+
+        console.log("token:");
+        console.log(req.cookies.token);
+        console.log("user:");
+        console.log(user);
+
+        if (user < 0) {
+            res.status(401).json({message: "Пользователь не авторизован"});    
+        }
+        else {
+            res.status(200).json(user);
+        }        
     }
     else {
         res.status(401).json({message: "Пользователь не авторизован"});

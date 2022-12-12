@@ -90,7 +90,7 @@ export default function LoginForm() {
         <div>{loginError}</div>
 
         Пароль:
-        <input value={password} onChange={handelPasswordChange} />
+        <input type="password" value={password} onChange={handelPasswordChange} />
         <br/>
         <div>{passwordError}</div>
 
